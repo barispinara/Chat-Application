@@ -1,6 +1,7 @@
 package com.ChatApplication.controller;
 
 
+import com.ChatApplication.ChatApplicationSecurity;
 import com.ChatApplication.config.WebSecurityConfig;
 import com.ChatApplication.model.User;
 import com.ChatApplication.payload.request.LoginRequest;
@@ -32,18 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(WebSecurityConfig.class)
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
-    @MockBean
-    private UserService userService;
-    @MockBean
-    private AuthenticationManager authenticationManager;
-    @MockBean
-    private JwtUtils jwtUtils;
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-    @MockBean
-    private AuthEntryPointJwt unauthorizedHandler;
-
+public class UserControllerTest extends ChatApplicationSecurity {
     @Autowired
     private MockMvc mockMvc;
 
