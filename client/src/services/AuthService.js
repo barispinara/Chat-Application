@@ -1,27 +1,47 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_URL = "user/";
 
-const register = (username, password,name,surname) => {
-    return axios.post(API_URL + "register" , {
+
+
+const register = (username, password, firstName, lastName) => {
+    return axios.post(API_URL + "register", {
         username,
         password,
-        name,
-        surname,
+        firstName,
+        lastName,
     })
 }
 
+
 const login = (username, password) => {
-    return axios.post(API_URL + "login" , {
+    return axios.post(API_URL + "login", {
         username,
         password,
     })
-    .then((response) => {
-        if(response.data.username){
-            localStorage.setItem("user" , JSON.stringify(response.data));
+        .then((response) => {
+            if (response.data.username) {
+                sessionStorage.setItem("user", JSON.stringify(response.data));
+            }
+            return response
+        })
+}
+
+const profile = () => {
+
+    const userToken = JSON.parse(sessionStorage.getItem("user")).token;
+
+    return axios.get(API_URL + "profile", {
+        headers: {
+            Authorization: `Bearer ${userToken}`
         }
-        return response
     })
+        .then((response => {
+            if (response.data.username) {
+                sessionStorage.setItem("profile", JSON.stringify(response.data));
+            }
+            return response
+        }))
 }
 
 
@@ -29,6 +49,7 @@ const login = (username, password) => {
 const AuthService = {
     register,
     login,
+    profile,
 }
 
 export default AuthService;

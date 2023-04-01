@@ -1,27 +1,13 @@
-import React, { useState} from "react";
-import {
-    Button,
-    TextField,
-    Link,
-    Box,
-    Grid,
-    Alert,
-    Typography,
-    CircularProgress
-} from '@mui/material'
-import { useNavigate } from 'react-router-dom';
-
-import AuthService from "../services/AuthService";
-
-const delay = ms => new Promise(
-    resolve => setTimeout(resolve,ms)
-)
-
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import '../style.scss'
+import { Alert, TextField } from '@mui/material'
+import AuthService from '../services/AuthService'
 export const Register = () => {
 
-    const [loading, setLoading] = useState(false)
-    const [responseMessage , setResponseMessage] = useState('')
-    const [responseStatus , setResponseStatus] = useState(0)
+    const [loading,setLoading] = useState(false)
+    const [responseMessage, setResponseMessage] = useState('')
+    const [responseStatus, setResponseStatus] = useState(0)
 
     const navigate = useNavigate();
 
@@ -34,16 +20,14 @@ export const Register = () => {
 
         const data = new FormData(e.currentTarget);
 
-        AuthService.register(data.get('username'), data.get('password'), data.get('name'), data.get('surname')).then(
+        AuthService.register(data.get("name") , data.get("surname") , data.get("username"), data.get("password")).then(
             (response) => {
-                console.log(response)
-                console.log(data)
                 const statusCode = response.status
                 const statusMessage = response.data.message
                 setResponseStatus(statusCode)
                 setResponseMessage(statusMessage)
                 setTimeout(() => {
-                    navigate('/')
+                    navigate("/")
                     setLoading(false)
                 },3000)
             },
@@ -57,38 +41,21 @@ export const Register = () => {
         )
     }
 
-    return(
-        <Grid container
-        sx={{
-            height: '100vh',
-            }}>
-        <Grid item xs={false} sm={4} md={7} className="imageGrid"
-            sx={{
-                backgroundImage: 'url("images/background.jpg")',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-            }}
-        />
-        <Grid item xs={12} sm={8} md={5}>
-            <Box 
-                sx={{
-                    my: 8,
-                    mx: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '75vh',
-                }}
-            >
-                <Box component="img" src="images/logo.png"/>
-                <Typography component="h1" variant="h5">
-                    Create an account
-                </Typography>
-                <Box component="form" onSubmit={handleSubmit} sx={{mt: 1}}>
+
+
+    return (
+        <div className="formContainer">
+            <div className="formWrapper">
+                <span className="logo">Chat App</span>
+                <span className="title">Register</span>
+                <form onSubmit={handleSubmit}>
                     {responseStatus === 400 && (
                         <Alert severity="error">
+                            {responseMessage}
+                        </Alert>
+                    )}
+                    {responseStatus === 401 && (
+                        <Alert severity="warning">
                             {responseMessage}
                         </Alert>
                     )}
@@ -97,61 +64,16 @@ export const Register = () => {
                             {responseMessage}
                         </Alert>
                     )}
-                    <TextField
-                        margin="normal"
-                        fullWidth
-                        required
-                        id="name"
-                        label="Name"
-                        name="name"
-                        autoFocus
-                    />
-                    <TextField
-                        margin="normal"
-                        fullWidth
-                        required
-                        id="surname"
-                        label="Surname"
-                        name="surname"
-                    />
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="Username"
-                        name="username"
-                    />
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{mt: 3, mb: 2}}
-                        disabled = {loading}
-                    >
-                        {loading ? <CircularProgress/> : "Submit"}
-                    </Button>
-                    <Grid item>
-                        <Link href='/' variant='body2'>
-                            Back to Login
-                        </Link>
-                    </Grid>
-                </Box>
-            </Box>
-        </Grid>
-    </Grid>
+                    <TextField required id="name" label="Name" name="name" variant="outlined"/>
+                    <TextField required id="surname" label="Surname" name="surname" variant="outlined"/>
+                    <TextField required id="username" label="Username" name="username" variant="outlined"/>
+                    <TextField required id="password" label="Password" name="password" variant="outlined"/>
+                    <button disabled={loading}>Sign up</button>
+                </form>
+                <p>
+                    You do have an account? <Link to="/">Login</Link>
+                </p>
+            </div>
+        </div>
     )
-
-
-
-   
 }
