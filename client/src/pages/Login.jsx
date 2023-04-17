@@ -1,50 +1,27 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import AuthService from "../services/AuthService"
+import React from 'react'
+import { Link} from 'react-router-dom'
+import { useSelector, useDispatch} from 'react-redux'
+import { login } from '../services/AuthService'
 import {Alert, TextField} from "@mui/material"
 import '../style.scss'
 
 export const Login = () => {
 
-    const[loading, setLoading] = useState(false);
-    const[responseMessage, setResponseMessage] = useState('');
-    const[responseStatus, setResponseStatus] = useState(0);
+    const loading = useSelector((state) => state.user.isLoading);
+    const responseMessage = useSelector((state) => state.user.responseMessage);
+    const responseStatus = useSelector((state) => state.user.responseStatus);
 
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        setResponseStatus(0)
-        setResponseMessage('')
-        setLoading(true)
-
         const data = new FormData(e.currentTarget);
-
-        AuthService.login(data.get("username"), data.get('password')).then(
-            (response) => {
-                const statusCode = response.status
-                const statusMessage = response.data.message
-                setResponseStatus(statusCode)
-                setResponseMessage(statusMessage)
-                AuthService.profile();
-                setTimeout(() => {
-                    navigate("/")
-                    setLoading(false)
-                    window.location.reload();
-                },5000)
-            },
-            (error) => {
-                const statusCode = error.response.status;
-                const statusMessage = error.response.data.message;
-                setResponseStatus(statusCode);
-                setResponseMessage(statusMessage);
-                setLoading(false);
-            }
-        )
+        const loginValue = {
+            username: data.get("username"),
+            password: data.get("password")
+        }
+        await dispatch(login(loginValue))
     }
-
-
 
     return (
         <div className="formContainer">

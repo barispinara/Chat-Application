@@ -3,6 +3,7 @@ package com.ChatApplication.service;
 
 import com.ChatApplication.model.User;
 import com.ChatApplication.payload.request.RegisterRequest;
+import com.ChatApplication.payload.response.UserResponse;
 import com.ChatApplication.repository.UserRepository;
 import com.ChatApplication.security.jwt.JwtUtils;
 import com.ChatApplication.security.jwt.PasswordEncoder;
@@ -13,6 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -39,6 +44,10 @@ public class UserService implements UserDetailsService {
                 registerRequest.getFirstName(),
                 registerRequest.getLastName()
         );
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date currentDate = new Date();
+        String strDate = dateFormatter.format(currentDate);
+        updateLastSeenAt(user, strDate);
 
         return userRepository.save(user);
     }
@@ -69,6 +78,14 @@ public class UserService implements UserDetailsService {
             return null;
         }
 
+    }
+    public List<UserResponse> getAllUsers(){
+        List<UserResponse> userList = new ArrayList<>();
+        for(User user: userRepository.findAll()){
+            userList.add(new UserResponse(user.getUsername(), user.getFullName(), user.getLastSeenAt()));
+        }
+
+        return userList;
     }
 
 

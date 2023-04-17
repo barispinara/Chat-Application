@@ -1,45 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import '../style.scss'
 import { Alert, TextField } from '@mui/material'
-import AuthService from '../services/AuthService'
+import { register } from '../services/AuthService'
+import {resetResponseMessage, resetResponseStatus} from '../redux/slices/AuthSlice'
+import { useDispatch, useSelector } from 'react-redux'
 export const Register = () => {
 
-    const [loading,setLoading] = useState(false)
-    const [responseMessage, setResponseMessage] = useState('')
-    const [responseStatus, setResponseStatus] = useState(0)
+    const loading = useSelector((state) => state.user.isLoading);
+    const responseMessage = useSelector((state) => state.user.responseMessage);
+    const responseStatus = useSelector((state) => state.user.responseStatus)
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        setResponseStatus(0)
-        setResponseMessage('')
-        setLoading(true)
-
         const data = new FormData(e.currentTarget);
-
-        AuthService.register(data.get("name") , data.get("surname") , data.get("username"), data.get("password")).then(
-            (response) => {
-                const statusCode = response.status
-                const statusMessage = response.data.message
-                setResponseStatus(statusCode)
-                setResponseMessage(statusMessage)
-                setTimeout(() => {
-                    navigate("/")
-                    setLoading(false)
-                },3000)
-            },
-            (error) => {
-                const statusCode = error.response.status
-                const statusMessage = error.response.data.message
-                setResponseStatus(statusCode)
-                setResponseMessage(statusMessage)
-                setLoading(false)
-            }
-        )
+        const registerValue = {
+            username: data.get("username"),
+            password: data.get("password"),
+            firstName: data.get("name"),
+            lastName: data.get("surname") 
+        }
+        await dispatch(register(registerValue))
     }
+
+    useEffect(() => {
+        if(responseStatus === 200){
+            setTimeout(() => {
+                dispatch(resetResponseMessage());
+                dispatch(resetResponseStatus());
+                navigate("/")
+            },2000)
+        }
+    }, [responseStatus])
 
 
 

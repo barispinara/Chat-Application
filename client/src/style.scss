@@ -142,6 +142,8 @@
 
                 .searchForm{
                     padding: 10px;
+                    display:flex;
+                    justify-content: space-between;
                     input{
                         background-color: transparent;
                         border: none;
@@ -151,6 +153,9 @@
                         &::placeholder{
                             color: lightgray;
                         }
+                    }
+                    button{
+                        color: white;
                     }
                 }
             }

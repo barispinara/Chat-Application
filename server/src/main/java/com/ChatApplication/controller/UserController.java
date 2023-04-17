@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -47,6 +48,7 @@ public class UserController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
         );
@@ -61,7 +63,7 @@ public class UserController {
                 .ok()
                 .body(new JwtResponse(
                         jwt,
-                        user.getUsername(),
+                        new UserResponse(user.getUsername(), user.getFullName(), user.getLastSeenAt()),
                         "Login is successful"
                 ));
     }
@@ -122,6 +124,22 @@ public class UserController {
 
         return ResponseEntity
                 .ok()
-                .body(new UserResponse(user.getUsername(), user.getFirstName(), user.getLastName(), user.getLastSeenAt()));
+                .body(new UserResponse(user.getUsername(), user.getFullName(), user.getLastSeenAt()));
+    }
+
+    @GetMapping(value = "/getAllUser")
+    public ResponseEntity<?> getAllUser(@RequestHeader("Authorization") String jwtToken){
+        User user = userService.findUserFromJwtToken(jwtToken);
+        if(user == null){
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid Jwt Token");
+        }
+
+        List<UserResponse> userList = userService.getAllUsers();
+        userList.removeIf(s -> s.getUsername().equals(user.getUsername()));
+        return ResponseEntity
+                .ok()
+                .body(userList);
     }
 }
