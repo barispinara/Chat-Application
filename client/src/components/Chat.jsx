@@ -46,7 +46,7 @@ export const Chat = () => {
             direction="column"
             height="100%"
         >
-            <Grid item xs={1} borderBottom={"1px solid gray"}>
+            <Grid item xs borderBottom={"1px solid gray"}>
                 <CardHeader
                     avatar={
                         <Avatar/>
@@ -58,8 +58,8 @@ export const Chat = () => {
                 >
                 </CardHeader>
             </Grid>
-            <Grid item xs={9.8}>
-                <List sx={{height: "60vh" , overflowY: 'auto'}}>
+            <Grid item xs={10}>
+                <List sx={{height: "100%" , overflowY: 'auto'}}>
                     {messages.map((item, index) => (
                         <ListItem key={index} ref={scrollRef}>
                             <ListItemText 
@@ -73,7 +73,7 @@ export const Chat = () => {
                     ))}
                 </List>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs>
                 <Paper
                     sx={{
                         display: 'flex',
