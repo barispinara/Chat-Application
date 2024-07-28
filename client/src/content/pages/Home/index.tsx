@@ -1,5 +1,6 @@
 import { Box, styled } from '@mui/material'
 import React from 'react'
+import Scrollbar from 'src/components/Scrollbar'
 import { Chat } from 'src/content/chat'
 import { Sidebar } from 'src/layout/Sidebar'
 
@@ -24,7 +25,9 @@ const Home = () => {
 	return (
 		<StyledBox>
 			<InnerStyledBox sx={{ flex: '0 0 30%' }}>
-				<Sidebar />
+				<Scrollbar>
+					<Sidebar />
+				</Scrollbar>
 			</InnerStyledBox>
 			<InnerStyledBox>
 				<Chat />
