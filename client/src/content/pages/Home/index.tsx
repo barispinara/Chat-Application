@@ -17,7 +17,6 @@ const InnerStyledBox = styled(Box)(
 	({ theme }) => `
     display: flex;
     flex: 1;
-    margin-bottom: ${theme.spacing(2)};
   `
 )
 

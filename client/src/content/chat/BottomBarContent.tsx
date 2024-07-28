@@ -21,7 +21,7 @@ function BottomBarContent() {
     return(
         <Box
             sx={{
-                background: theme.colors.alpha.white[50],
+                background: theme.colors.alpha.white[30],
                 display: 'flex',
                 alignItems: 'center',
                 p: 2

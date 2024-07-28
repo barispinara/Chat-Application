@@ -6,9 +6,9 @@ const DividerWrapper = styled(Divider)(
         .MuiDivider-wrapper {
             border-radius: ${theme.general.borderRadiusSm};
             text-transform: none;
-            background: ${theme.palette.background.default};
+            background: ${theme.colors.secondary.main};
+            color: ${theme.palette.primary.dark};
             font-size: ${theme.typography.pxToRem(13)};
-            color: ${theme.colors.alpha.black[50]};
         }
     `
 )
@@ -27,8 +27,8 @@ const CardWrapperPrimary = styled(Card)(
 
 const CardWrapperSecondary = styled(Card)(
 	({ theme }) => `
-        background: ${theme.colors.alpha.black[10]};
-        color: ${theme.colors.alpha.black[100]};
+        background: ${theme.colors.secondary.dark};
+        color: ${theme.palette.primary.contrastText};
         padding: ${theme.spacing(2)};
         border-radius: ${theme.general.borderRadiusXl};
         border-top-left-radius: ${theme.general.borderRadius};
